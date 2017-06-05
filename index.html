@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Riven Tool</title>
+    <link href="styles/styles.css" rel="stylesheet">
+    <link rel="shortcut icon" href="images/favicon.ico"/>
+    <script src="controller/app.js" type="text/javascript"></script>
+    <script
+        src="https://code.jquery.com/jquery-3.2.1.js"
+        integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+        crossorigin="anonymous"></script>
+    <!--script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.js" type="text/javascript"></script>
+</head>
+<body>
+    <div id="header">Riven Tool</div>
+
+    <div id="content">
+        <!-- Riven Input -->
+        <div class="container">
+            <div class="panel">
+                <div class="header" id="instructions">Instructions</div>
+                <div id="toggle_content">
+                    <div class="info">Welcome! This page is a Riven Calculation Tool and it provides the Rivenmains community with a platform to compare builds and combos against a theoretical enemy throughout the 18 levels.</div>
+
+                    <div class="title">Builds</div>
+                    <div class="field">
+                        <div class="info">
+                            <ul>
+                                <li>First up, you will need to create a build for Riven.  A "Base Build" is provided by default, however it does not include runes or items.</li>
+                                <li>Scroll further down to the 'Riven Builds' section and name your build (preferably something representative of its stats). For example, if you'd like to compare a build including BC &amp; DD vs. DD, GB and Lucidity boots, you can name them 'BC Build' and 'GB Build' respectively.</li>
+                                <li>Now begin by filling in Riven's Base Stats (in case they've changed since this tool was created in 7.10)</li>
+                                <li>Otherwise, move right along to the ability order section. Here you can specify a different ability order, such as an E max with 'EQW' so that the damage calculations are accurate.</li>
+                                <li>In the next section you will be able to select runes. If you're trying to compare potential rune pages, copy the final stats from your League Client including the AD, AD/level, and Lethality values</li>
+                                <li>Next, dive into the Items section. This section may require searching around <a href="https://lol.garena.com/items">https://lol.garena.com/items</a> to come up with the specific stats. Just remember to account for Tiamat or Hydra, if you intend on using it in the combos section.</li>
+                                <li>Finally click 'Add Combo' to save all of your entered statistics as a new build. Otherwise, right below the 'Add Combo' button is a section where you can remove existing builds, such as the 'Base Build' provided to you.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="title">Enemy</div>
+                    <div class="field">
+                        <div class="info">
+                            <ul>
+                                <li>After specifying Riven's build, we create an enemy or test dummy to test the build against. It may be helpful to use <a href="http://gameinfo.na.leagueoflegends.com/en/game-info/champions/">http://gameinfo.na.leagueoflegends.com/en/game-info/champions/</a> for champion information.</li>
+                                <li>Start off by entering the enemy champions base stats. The default base stats are based off of Darius, with 30 flat armor and 4 additional armor per level.</li>
+                                <li>Then include a typical rune page one of these champions may be using. For example, 9 flat armor yellows is normal for a ADC or bruiser, so may be a good number to start with.</li>
+                                <li>Next up, move on to the items section. Again <a href="https://lol.garena.com/items">https://lol.garena.com/items</a> may be helpful in determining the total armor provided by items in a typical build. Because this tool doesn't allow you to "buy" items at different levels, make sure to have both Riven's build and the Enemy's build at roughly the same point in the game for an accurate comparison.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="title">Combos</div>
+                    <div class="field">
+                        <div class="info">
+                            <ul>
+                                <li>Finally we have the Combos section. Here you create potential combos that you would like to test the build with. Different builds can have different strengths, so I'd recommend including some short trades and full 'Burst Combos' to get a wide range of statistics.</li>
+                                <li>Start off by naming your combos. Many combos have pre-existing names such as the provided 'Sexy Combo'. Others may be too common, such as a 'Short Trade' that may include 'QWA'.</li>
+                                <li>Make sure to follow the accompanying information in the combos section to build the combos correctly!</li>
+                                <li>Otherwise, Add and Remove combos until you feel that you have a good variety (2-3 Combos should do).</li>
+                                <li>Lastly, click Calculate Results to see how the builds and combos compare.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="header" id="riven">Riven Builds</div>
+
+                <!-- Build Name -->
+                <div class="title">Build Name</div>
+                <div class="field">
+                    <div class="info" id="riven_build_name_info">Name your build to identify it in the results graph.</div>
+                    <div class="error" id="riven_build_name_error"></div>
+                    <input type="text" class="input" id="riven_build_name" placeholder="E.g. Lifesteal" autofocus />
+                </div>
+
+                <!-- Base Stats -->
+                <div class="title">Base Stats</div>
+                <div class="field">
+                    <div class="info" id="riven_base_info">Defaults to 56.04 and 3.00 repectively</div>
+                    <div class="error" id="riven_base_error"></div>
+                    <input type="text" class="input" id="riven_base_ad" placeholder="Base AD" />
+                    <input type="text" class="input" id="riven_base_ad_scale" placeholder="Base AD per level" />
+                </div>
+
+                <!-- Ability Order -->
+                <div class="title">Ability Order</div>
+                <div class="field">
+                    <div class="info" id="riven_abilityorder_info">Place the 3 ability keybinds in order. Defaults to 'QEW'. R is always taken when available.</div>
+                    <div class="error" id="riven_abilityorder_error"></div>
+                    <input type="text" class="input" id="riven_abilityorder" value="QEW" />
+                </div>
+
+                <!-- Ability Damage -->
+                <div class="title">Ability Damage</div>
+                <div class="field">
+                    <div class="info" id="riven_abilitydamage_info">
+                        <ul>
+                            <li>This may be editable in the future, however for now the damage and scalings are based on Riven in patch 7.10.</li>
+                            <li>(P) Runic Blade - + 0.25/0.30/0.35/0.40/0.45/0.50 Total AD on next auto, at levels 1/6/9/12/15/18</li>
+                            <li>(Q) Broken Wings - 10/30/50/70/90 (+ 0.4/0.45/0.5/0.55/0.6 Total AD)</li>
+                            <li>(W) Ki Strike - 50/80/110/140/170 (+ 1.0 Bonus AD)</li>
+                            <li>(R) Blade of the Exile - + 20% Bonus Attack Damage for 15 seconds, and Wind Slash becomes available</li>
+                            <li>(S) Wind Slash - 100/150/200 (+ 0.6 Bonus AD) to 300/450/600 (+ 1.8 Bonus AD) based on enemy health percentage</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Runes -->
+                <div class="title">Runes</div>
+                <div class="field">
+                    <div class="info" id="riven_runes_info">All values here default to 0.00</div>
+                    <div class="error" id="riven_runes_error"></div>
+                    <input type="text" class="input" id="riven_runes_ad" placeholder="Attack Damage" />
+                    <input type="text" class="input" id="riven_runes_ad_scale" placeholder="AD/level" />
+                    <input type="text" class="input" id="riven_runes_lethality" placeholder="Lethality" />
+                </div>
+
+                <!-- Items -->
+                <div class="title">Items</div>
+                <div class="field">
+                    <div class="info" id="riven_items_info">All values here default to 0.00</div>
+                    <div class="error" id="riven_items_error"></div>
+                    <input type="text" class="input" id="riven_items_ad" placeholder="Attack Damage" />
+                    <input type="text" class="input" id="riven_items_lethality" placeholder="Lethality" />
+                    <input type="text" class="input" id="riven_items_pen_perc" placeholder="Bonus Armor Pen %" />
+                    <input type="text" class="input" id="riven_items_base_ad_perc" placeholder="Added % Base AD" />
+                    <input type="text" class="input" id="riven_items_shred_perc" placeholder="Armor Shred % per hit" />
+                    <input type="text" class="input" id="riven_items_shred_max" placeholder="Armor Shred % max" />
+                </div>
+
+                <button id="add_build" class="add_button" onclick="AddBuild()" style="margin:10px 0 0 820px;">Add Build</button>
+
+                <div class="remove_field" id="builds">
+                    <div class="info">Click on a Build's Box to remove it</div>
+                    <!-- Builds are added here -->
+                    <div class="remove_box" onclick="RemoveBuild('build1')" id="build1">
+                        <div class="remove_name">Base Build</div>
+                        <div class="remove_info">AD @ Lvl 1: 57.04</div>
+                        <div class="remove_info">AD @ Lvl 18: 107.04</div>
+                        <div class="remove_info">Lethality: 0.00</div>
+                        <div class="remove_info">Armor Shred / Hit: 0</div>
+                        <div class="remove_info">Armor Pen: 0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enemy Input -->
+        <div class="container">
+            <div class="panel">
+                <div class="header" id="enemy">Enemy</div>
+
+                <!-- Base Stats -->
+                <div class="title">Base Stats</div>
+                <div class="field">
+                    <div class="info" id="enemy_base_info">Defaults to 30.00 and 4.00 respectively.</div>
+                    <div class="error" id="enemy_base_error"></div>
+                    <input type="text" class="input" id="enemy_base_armor" placeholder="Base Armor" />
+                    <input type="text" class="input" id="enemy_base_armor_scale" placeholder="Base Armor per level" />
+                </div>
+
+                <!-- Runes -->
+                <div class="title">Runes</div>
+                <div class="field">
+                    <div class="info" id="enemy_runes_info"></div>
+                    <div class="error" id="enemy_runes_error"></div>
+                    <input type="text" class="input" id="enemy_runes_armor" placeholder="Armor" />
+                    <input type="text" class="input" id="enemy_runes_armor_scale" placeholder="Armor per level" />
+                </div>
+                
+                <!-- Items -->
+                <div class="title">Items</div>
+                <div class="field">
+                    <div class="info" id="enemy_items_info"></div>
+                    <div class="error" id="enemy_items_error"></div>
+                    <input type="text" class="input" id="enemy_items_armor" placeholder="Armor" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Combo Input -->
+        <div class="container">
+            <div class="panel">
+                <div class="header">Combos</div>
+                <div class="info" id="combos_info">
+                    <ul>
+                        <li>Place the ability's corresponding letter in the order that the damage is applied. Not the cast order</li>
+                        <li>Riven's passive is applied with each ability, use P to automatically increment the Passive Counter</li>
+                        <li>(R) Blade of the Exile deals no damage, however increases Riven's AD by 20% of her bonus AD for the remainder of the combo</li>
+                        <li>Wind Slash (S) will assume each prior hit has dealt 25% of the target's health, maxing at 75% taken for the full execution damage of Wind Slash</li>
+                        <li>(A) Auto, (P) +1 Runic Blade, (Q) Broken Wings, (W) Ki Strike, (R) Blade of the Exile, (S) Wind Slash, (T) Tiamat/Hydra active</li>
+                        <li>Titanic Hydra is not available because Health is not included</li>
+                        <li>If there is a Tiamat or Hydra in the combo, the damage (100% Total AD) will be applied at all levels, whether you're included it in the items or not.</li>
+                    </ul>
+                </div>
+
+                <!-- Combo -->
+                <div class="title">Combo Creator</div>
+                <div class="field">
+                    <div class="error" id="combo_error"></div>
+                    <input type="text" class="input" id="combo_input_name" placeholder="Combo Name" />
+                    <input type="text" class="input" id="combo_input_abilities" placeholder="Abilities Hit" />
+                    <button id="add_combo" class="add_button" onclick="AddCombo()" style="margin:10px 0 0 300px;">Add Combo</button>
+                </div>
+
+                <div class="remove_field" id="combos">
+                    <div class="info">Click on a Combo's Box to remove it</div>
+                    <!-- Combos are added here -->
+                    <div class="remove_box" onclick="RemoveCombo('combo1')" id="combo1">
+                        <div class="remove_name">The Sexy Combo</div>
+                        <div class="remove_info">RTWQS</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results/Output -->
+        <div class="container">
+            <div class="panel" style="background-color:rgba(214, 204, 164, 0.95);">
+                <div class="topbar">
+                    <div class="header">Results</div>
+                    <button id="calculate_results" class="add_button" onclick="CalculateResults()" style="margin-right:20px;">Calculate Results</button>
+                </div>
+
+                <canvas id="results" width="980" height="600"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer">Tool created by 'I am Serenity'</div>
+
+    <script type="text/javascript">
+    $(document).ready(function(){
+        $("#instructions").click(function() {
+            $("#toggle_content").slideToggle("fast");
+        });
+    });
+    </script>
+</body>
+</html>
